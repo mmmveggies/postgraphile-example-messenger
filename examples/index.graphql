@@ -1,0 +1,173 @@
+query RecentMessages(
+  $alias: String = "Foo"
+  $recent: Datetime = "2021-09-10T00:00:00.000Z"
+) {
+  # All recent messages regardless of recipient or notification status.
+  messages(
+    first: 100
+    orderBy: [SENT_AT_DESC, ID_DESC]
+    filter: { sentAt: { greaterThan: $recent } }
+  ) {
+    ...MessagesDetails
+  }
+
+  # Messages sent to a specific user and that they have not
+  # archived all notifications for.
+  inbox: messages(
+    first: 100
+    orderBy: [SENT_AT_DESC, ID_DESC]
+    filter: {
+      and: [
+        { sentAt: { greaterThan: $recent } }
+        {
+          notifications: {
+            some: {
+              and: [
+                { status: { notEqualTo: ARCHIVED } }
+                { recipient: { alias: { equalTo: $alias } } }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ) {
+    ...MessagesDetails
+  }
+}
+
+mutation NotifySelf(
+  $alias: String = "Foo"
+  $content: String = "Hello World"
+) {
+  ...EnsureUser
+
+  createNotification(
+    input: {
+      notification: {
+        userToRecipientId: { connectByAlias: { alias: $alias } }
+        messageToMessageId: {
+          create: {
+            content: $content
+            userToSenderId: { connectByAlias: { alias: $alias } }
+          }
+        }
+      }
+    }
+  ) {
+    notification {
+      status
+      recipient {
+        alias
+      }
+      message {
+        ...MessageDetails
+      }
+    }
+  }
+}
+
+mutation SimulateThread {
+  upsertFoo: upsertUser(
+    where: { alias: "Foo" }
+    input: { user: { alias: "Foo" } }
+  ) {
+    user {
+      id
+    }
+  }
+  upsertBar: upsertUser(
+    where: { alias: "Bar" }
+    input: { user: { alias: "Bar" } }
+  ) {
+    user {
+      id
+    }
+  }
+
+  createMessage(
+    input: {
+      message: {
+        content: "Nice too meet you Bar, I'm Foo."
+        userToSenderId: { connectByAlias: { alias: "Bar" } }
+        notificationsUsingId: {
+          create: {
+            status: UNREAD
+            userToRecipientId: { connectByAlias: { alias: "Foo" } }
+          }
+        }
+        messageToPromptId: {
+          create: {
+            userToSenderId: { connectByAlias: { alias: "Bar" } }
+            content: "My name is Bar, and you?"
+            notificationsUsingId: {
+              create: {
+                status: READ
+                userToRecipientId: { connectByAlias: { alias: "Foo" } }
+              }
+            }
+            messageToPromptId: {
+              create: {
+                content: "Hello there, who are you?"
+                userToSenderId: { connectByAlias: { alias: "Foo" } }
+                notificationsUsingId: {
+                  create: {
+                    status: ARCHIVED
+                    userToRecipientId: { connectByAlias: { alias: "Bar" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ) {
+    message {
+      ...MessageDetails
+    }
+  }
+}
+
+fragment EnsureUser on Mutation {
+  upsertUser(where: { alias: $alias }, input: { user: { alias: $alias } }) {
+    user {
+      id
+    }
+  }
+}
+
+fragment MessagesDetails on MessagesConnection {
+  totalCount
+  nodes {
+    ...MessageDetails
+  }
+}
+
+fragment MessageDetails on Message {
+  id
+  sentAt
+  content
+  sender {
+    id
+    alias
+  }
+  prompt {
+    id
+    sentAt
+    content
+    sender {
+      id
+      alias
+    }
+    prompt {
+      id
+      sentAt
+      content
+      sender {
+        id
+        alias
+      }
+    }
+  }
+}

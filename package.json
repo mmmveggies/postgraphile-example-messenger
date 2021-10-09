@@ -1,0 +1,38 @@
+{
+  "name": "postgrapihle-example-messenger",
+  "author": "jakeselig@gmail.com",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A simple messenger api demonstrating postgraphile.",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "graphql": "ts-node-dev -r dotenv/config src/server.ts",
+    "db": "docker-compose up",
+    "migrate": "graphile-migrate watch"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.2",
+    "@types/node": "^16.10.3",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "@fullstackio/postgraphile-upsert-plugin": "^1.4.0",
+    "@graphile-contrib/pg-many-to-many": "^1.0.1",
+    "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
+    "graphile-migrate": "^1.2.0",
+    "graphile-upsert-plugin": "^1.0.0",
+    "graphql": "^15.6.1",
+    "postgraphile": "^4.12.4",
+    "postgraphile-plugin-connection-filter": "^2.2.2",
+    "postgraphile-plugin-nested-mutations": "^1.1.0"
+  }
+}

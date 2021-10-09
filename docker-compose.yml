@@ -1,0 +1,12 @@
+services:
+  postgraphile-example-messenger_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      # Delete local `./postgres-data` cache for a "factory reset"
+      - ./postgres-data:/var/lib/postgresql/data

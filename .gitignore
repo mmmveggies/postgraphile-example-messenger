@@ -1,0 +1,7 @@
+node_modules
+package-lock.json
+postgres-data
+
+# # The '.env' file should be gitignored, the boilerplate retains it for demonstration.
+# # Please fork and uncomment the following line
+# .env
