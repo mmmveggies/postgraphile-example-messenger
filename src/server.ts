@@ -20,7 +20,7 @@ const middleware = postgraphile(conn, ['main'], {
     ...[
       '@graphile-contrib/pg-many-to-many',
       '@graphile-contrib/pg-simplify-inflector',
-      // 'graphile-upsert-plugin',
+      '@graphile/pg-aggregates',
       'postgraphile-plugin-connection-filter',
       'postgraphile-plugin-nested-mutations',
     ].map(require),
