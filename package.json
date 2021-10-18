@@ -1,6 +1,5 @@
 {
   "name": "postgrapihle-example-messenger",
-  "author": "jakeselig@gmail.com",
   "private": true,
   "version": "1.0.0",
   "description": "A simple messenger api demonstrating postgraphile.",
