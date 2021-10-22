@@ -42,3 +42,11 @@ create table main.notification (
 );
 create index on main.notification (message_id);
 create index on main.notification (recipient_id);
+
+create or replace function main.user_influence(src main.user) returns int as $$
+    select count(distinct n.recipient_id)
+    from main.notification n
+    where n.status in ('UNREAD', 'ARCHIVED')
+    and n.recipient_id != src.id;
+$$ language sql stable;
+comment on function main.user_influence(src main.user) is E'Number of other users who have acknowledged messages from this user.';

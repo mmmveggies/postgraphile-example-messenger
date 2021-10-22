@@ -1,13 +1,13 @@
 {
   "name": "postgrapihle-example-messenger",
   "private": true,
-  "version": "1.0.0",
-  "description": "A simple messenger api demonstrating postgraphile.",
+  "version": "2.0.0",
+  "description": "A simple messenger api demonstrating postgraphile and federation.",
   "engines": {
     "node": ">=16"
   },
   "scripts": {
-    "graphql": "ts-node-dev -r dotenv/config src/server.ts",
+    "graphql": "ts-node-dev -r dotenv/config src/serve.ts",
     "db": "docker-compose up",
     "migrate": "graphile-migrate watch"
   },
@@ -24,14 +24,24 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "@apollo/federation": "^0.33.3",
+    "@apollo/gateway": "^0.42.3",
     "@fullstackio/postgraphile-upsert-plugin": "^1.4.0",
     "@graphile-contrib/pg-many-to-many": "^1.0.1",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "@graphile/pg-aggregates": "^0.1.0",
+    "@types/graphql-upload": "^8.0.7",
+    "apollo-server-core": "^3.4.0",
+    "apollo-server-express": "^3.4.0",
+    "axios": "^0.23.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "graphile-migrate": "^1.2.0",
     "graphile-upsert-plugin": "^1.0.0",
     "graphql": "^15.6.1",
-    "postgraphile": "^4.12.4",
+    "graphql-upload": "^12.0.0",
+    "postgraphile": "^4.12.5",
+    "postgraphile-apollo-federation-plugin": "^0.3.0",
     "postgraphile-plugin-connection-filter": "^2.2.2",
     "postgraphile-plugin-nested-mutations": "^1.1.0"
   }
